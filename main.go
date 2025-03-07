@@ -12,7 +12,7 @@ import (
 	"github.com/xavicci/FULLAPIRESTGO/server"
 )
 
-func mains() {
+func main() {
 	err := godotenv.Load(".env")
 
 	if err != nil {

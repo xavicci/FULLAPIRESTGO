@@ -56,5 +56,43 @@ func main() {
 	fmt.Println("*miCasa1", *miCasa1)
 	fmt.Println("&miCasa1", &miCasa1)
 	fmt.Println("----------")
+	fmt.Println("----------")
+	fmt.Println("----------")
 
+	type Config struct {
+		Port        string
+		JWTSecret   string
+		DatabaseUrl string
+	}
+
+	type Server interface {
+		Config() *Config
+	}
+
+	type Broker struct {
+		config *Config
+		router string
+	}
+
+	mibroker := &Broker{
+		config: &Config{
+			Port:        "3131",
+			JWTSecret:   "sds",
+			DatabaseUrl: "CARAMEL",
+		},
+		router: "AB",
+	}
+
+	configuracion := mibroker.config.DatabaseUrl
+
+	otrobroker := &Broker{}
+	otrobroker.config.JWTSecret = "SECRET JWT"
+
+	fmt.Println("*mibroker", *mibroker)
+	fmt.Println("&mibroker", &mibroker)
+	fmt.Println("configuracion", configuracion)
+	fmt.Println(" otrobroker.config.JWTSecret")
+	fmt.Println("----------")
+	fmt.Println("----------")
+	fmt.Println("----------")
 }

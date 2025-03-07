@@ -50,7 +50,7 @@ func (b *Broker) Start(binder func(s Server, r *mux.Router)) {
 	b.router = mux.NewRouter()
 	binder(b, b.router)
 	log.Println("Starting server on port", b.Config().Port)
-	if err := http.ListenAndServe(":"+b.config.Port, b.router); err != nil {
+	if err := http.ListenAndServe(b.config.Port, b.router); err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
 }
