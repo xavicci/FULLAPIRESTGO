@@ -106,3 +106,39 @@ func (repo *PostgresRepository) GetPostById(ctx context.Context, id string) (*mo
 	}
 	return &post, nil
 }
+
+func (repo *PostgresRepository) UpdatePost(ctx context.Context, post *models.Post) error {
+	_, err := repo.db.ExecContext(ctx, "UPDATE posts SET post_content = $1 WHERE id = $2 and user_id=$3", post.PostContent, post.Id, post.UserID)
+	return err
+}
+
+func (repo *PostgresRepository) DeletePost(ctx context.Context, id string, userId string) error {
+	_, err := repo.db.ExecContext(ctx, "DELETE FROM posts WHERE id = $1 and user_id=$2", id, userId)
+	return err
+}
+func (repo *PostgresRepository) ListPosts(ctx context.Context, page uint64) ([]*models.Post, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT id, post_content, created_at, user_id FROM posts ORDER BY created_at DESC LIMIT $1 OFFSET $2", 2, page*2)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	var posts []*models.Post
+	for rows.Next() {
+		var post models.Post
+		if err = rows.Scan(&post.Id, &post.PostContent, &post.CreatedAt, &post.UserID); err == nil {
+			posts = append(posts, &post)
+		}
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return posts, nil
+}
